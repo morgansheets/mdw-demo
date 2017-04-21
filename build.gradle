@@ -1,0 +1,31 @@
+apply plugin: "java"
+    
+version = "1.0.05"
+libsDirName = "../${assetLoc}/com/centurylink/mdw/demo/cool"
+jar.archiveName = "mdw-demo.jar"
+sourceCompatibility = 1.8
+
+repositories {
+    maven {
+        url "http://lxdenvmtc143.dev.qintra.com:7021/maven/repository"
+    }
+}
+
+dependencies {
+    compile files("../../mdw/com.centurylink.mdw.designer.core/bin")
+    compile group: "com.centurylink.mdw", name: "mdw-schemas", version: mdwVersion
+    compile group: "com.centurylink.mdw", name: "mdw-common", version: mdwVersion
+    compile group: "com.centurylink.mdw", name: "mdw-services", version: mdwVersion
+    compile group: "com.centurylink.mdw", name: "mdw-listeners", version: mdwVersion
+    compile group: "com.centurylink.mdw", name: "mdw-workflow", version: mdwVersion
+}
+
+task autoTest(type: GradleBuild) {
+    buildFile = "test.gradle"
+    tasks = ["functionTests", "cucumberTests"]
+}
+
+task autoTestWithResultsHtml(type: GradleBuild) {
+    buildFile = "test.gradle"
+    tasks = ["automatedTests"]
+}

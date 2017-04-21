@@ -1,0 +1,15 @@
+build
+deploy
+target
+data
+.apt_src
+.gradle/
+.temp
+release
+*.launch
+testResults
+.metadata
+mdwlibs
+exportedAssets
+/logs.txt
+.gradle
