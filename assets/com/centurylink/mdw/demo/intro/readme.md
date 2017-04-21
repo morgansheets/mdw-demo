@@ -17,7 +17,6 @@ The assets in this package illustrate the following MDW features:
  - Customizing MDWHub through AngularJS assets
  - Markdown documentation (like this)
  - MDW Automated tests
- - Customized dashboard charts
  - TODO: Fallout/Error handling
  - 
  
