@@ -15,6 +15,7 @@ The assets in this package illustrate the following MDW features:
  - Web service adapter activity
  - Markdown documentation (like this)
  - MDW Automated tests
+   (under intro/tests)
  - TODO: Fallout/Error handling
  
  Sample Request:
@@ -23,6 +24,5 @@ The assets in this package illustrate the following MDW features:
   <customerId>DHO115360</customerId>
 </donsOrder>```
 
-TODO: describe tests
-(with **links** to docs)
+TODO: (with **links** to docs)
 
