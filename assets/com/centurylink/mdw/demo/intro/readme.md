@@ -26,5 +26,3 @@ The assets in this package illustrate the following MDW features:
 
 
 
-
-
