@@ -13,7 +13,6 @@ The assets in this package illustrate the following MDW features:
  - External Event Handlers
  - REST services and Swagger API docs
  - Web service adapter activity
- - Custom webapp branding/look-and-feel
  - Markdown documentation (like this)
  - MDW Automated tests
  - TODO: Fallout/Error handling
