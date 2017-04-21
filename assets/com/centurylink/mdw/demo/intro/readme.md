@@ -29,5 +29,3 @@ The assets in this package illustrate the following MDW features:
 
 TODO: describe tests
 (with links to docs)
-
-TODO: describe hub-ui example
