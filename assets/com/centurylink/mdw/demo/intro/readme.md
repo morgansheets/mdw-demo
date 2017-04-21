@@ -28,4 +28,4 @@ The assets in this package illustrate the following MDW features:
 </donsOrder>```
 
 TODO: describe tests
-(with links to docs)
+(with **links** to docs)
