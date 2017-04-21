@@ -14,7 +14,6 @@ The assets in this package illustrate the following MDW features:
  - REST services and Swagger API docs
  - Web service adapter activity
  - Custom webapp branding/look-and-feel
- - Customizing MDWHub through AngularJS assets
  - Markdown documentation (like this)
  - MDW Automated tests
  - TODO: Fallout/Error handling
