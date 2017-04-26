@@ -1,15 +1,16 @@
 ## MDW 6 Demo
 #### Setup Eclipse with MDW Plug-In
 
-- Make sure Java Runtime 1.8.x is installed on your computer:
-  http://www.oracle.com/technetwork/java/javase/downloads
+- Make sure Java Runtime 1.8.x is installed on your computer:   
+  [http://www.oracle.com/technetwork/java/javase/downloads](http://www.oracle.com/technetwork/java/javase/downloads)
   
 - Set JAVA_HOME to JDK 1.8.X:                                                                                                                                          
   ![xml formatter](docs/images/image001.png)
                                                                                                                                                                         
 - Set the path:  %PATH%;%JAVA_HOME%\bin;
 
-- Install Eclipse Neon (4.6.x) for JavaEE Developers:  https://www.eclipse.org/downloads
+- Install Eclipse Neon (4.6.x) for JavaEE Developers: 
+  [https://www.eclipse.org/downloads](https://www.eclipse.org/downloads)
 
 - Launch Eclipse:
   Here’s an example command line that includes appropriate JVM memory settings for running and debugging:
