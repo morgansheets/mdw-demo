@@ -46,17 +46,11 @@ You can perform many cloud development activities using a remote workflow projec
 
 #### Add Git Repository:
 - The mdw-demo workflow project is hosted in the MDW AppFog Git Repository.  If you prefer to use command line Git, clone the repository from 
-  https://8.22.8.164/mdw/mdw-demo.git using credentials mdw/ldap_0123.
- 
-- Disable Git SSL Verification in Eclipse:
-  Our SSL certificate is self-signed and is not trusted by Git.  Therefore, the first step is to disable (at least temporarily) SSL verification.  From the Eclipse menu, select Window > Preferences > 
- Team > Git > Configuration > Add Entry… 
- 
-  ![xml formatter](docs/images/image004.png)
+  https://github.com/mdw-dev/mdw-demo.git. 
   
 ### Clone mdw-demo project into your workspace:
 - Access the Git Repositories view by selecting Window > Show View > Other > Git > Git Repositories:
-- Copy the repository URL into your clipboard: https://8.22.8.164/mdw/mdw-demo.git
+- Copy the repository URL into your clipboard: https://github.com/mdw-dev/mdw-demo.git
 - Right-click in Git Repositories view and select Paste Repository Path or URI.
 - Enter mdw for the User and ldap_0123 for the Password:
 
@@ -83,116 +77,6 @@ You can perform many cloud development activities using a remote workflow projec
 - It will make more sense after you have gone through creating your first workflow process. But for now, you can take a look at the demo intro 
   process to get a feel for it by opening the com.centurylink.mdw.demo.intro package and double click the HandleOrder process in the mdw-demo 
   project and you will be able to view the demo Process design model.
-
-### Build Workflow Process
- 
-#### Create Workflow Package:
-- The top-level branches in the project tree represent workflow packages.  Your work should be incorporated in a dedicated package, which will be used for managing resources and for 
-  insulating your work from that of other users.  For further details refer to the Eclipse Cheat Sheet (Help > Cheat Sheets > MDW Workflow > Importing, Exporting and Versioning).
-- Create your workflow package by right-clicking on your project (i.e., mdw-demo) and selecting New > MDW Package.  Note: make sure your package name complies with Java package naming 
-  requirements (eg: no spaces) since it will contain dynamic Java resources.  Leave the Workgroup drop down blank.
-  
-  ![xml formatter](docs/images/image008.png)
-  
-#### Create Process:
-- Right-click on your new package in Process Explorer and select New > MDW Process.  Enter the process name and description (no workgroup), and click Finish.
-  ![xml formatter](docs/images/image009.png)
-  
-#### Add some Process Variables:
-- Double-click on the process title or on a blank area somewhere in the canvas to display the Properties View.  Select the Variables property tab and add an input variable (request) 
-  and two local variables (orderId and validationResult) with types as depicted below.
-  
-  ![xml formatter](docs/images/image010.png)
-  
-- Save your process design by selecting File > Save from the menu (or by clicking the disk icon in the Eclipse toolbar, or by typing ctrl-s).  Elect to overwrite the current 
-  version and to remember this selection for future saves.  During iterative development for convenience you'll sometimes overwrite the existing version of a process definition. However 
-  once you've exported to another environment you'll want to increment the version since you cannot re-import a changed process with the same version number.  Details are covered under 
-  Help > Cheat Sheets > MDW Workflow > Importing, Exporting and Versioning.
-  
-  ![xml formatter](docs/images/image011.png)
- 
-#### Create Dynamic Java Custom Activity:
-- Right-click on your package in Process Explorer and select New > Activity > General Activity.  On the first page of the wizard, enter a label to identify your activity in the Toolbox view:
-
-  ![xml formatter](docs/images/image012.png)
-
-- Click Next and enter a class name for your activity implementor.  The Java package name is the same as your workflow package name.
-![xml formatter](docs/images/image013.png)
-
-- When you click Finish the Java code for a skeleton implementation is generated.  You'll also see the Java class under your package in Process Explorer.  This source code resides under 
-  src/main/workflow and is known as a Dynamic Java workflow asset.  It's dynamic because it can be changed without needing any kind of application deployment.  Naturally there are rigorous 
-  controls in place to prevent unauthorized modifications.  You should have been granted permissions in the MDW Demo environment to create and modify workflow assets.  With Dynamic Java, 
-  as with all types of workflow assets, MDW provides facilities for versioning, rollback and import/export for migrating between environments.
-- Update the generated Java source code to resemble the following:
- 
-    	package mypackage;
-    	import com.centurylink.mdw.common.utilities.logger.StandardLogger.LogLevel;
-    	import com.centurylink.mdw.common.utilities.timer.Tracked;
-		import org.w3c.dom.Document;
-		import org.w3c.dom.Node;
-		import com.centurylink.mdw.activity.ActivityException;
-		import com.centurylink.mdw.model.value.activity.ActivityRuntimeContext;
-		import com.centurylink.mdw.workflow.activity.DefaultActivityImpl;
-    	/**
-		* MDW general activity.
-    	*/
-    	@Tracked(LogLevel.TRACE)
-    	public class MyOrderValidatorActivity extends DefaultActivityImpl {
-    		/**
-			* Here's where the main processing for the activity is performed.
-			* @return the activity result (aka completion code)
-    		*/
-    		@Override
-    		public Object execute(ActivityRuntimeContext runtimeContext) throws ActivityException {
-        		loginfo("Validating order...");
-        		Document request = (Document) getVariableValue("request");
-        		Node orderIdNode = request.getFirstChild().getFirstChild().getNextSibling();
-        		String orderId = orderIdNode.getFirstChild().getNodeValue();
-        		setVariableValue("orderId", orderId);      
-        		boolean valid = true;
-        		String msg = "Success";
-        		if (!orderIdNode.getLocalName().equals("orderId"))
-          	 	msg = "Missing order ID.";       
-        		valid = msg.equals("Success");
-        		setVariableValue("validationResult", msg);    
-        		return valid;
-        	}
-       }
- 
-- Now if you switch back to your process the new activity should appear in the Toolbox View.  
-- From the toolbox, drag your activity onto the canvas and insert it into your process flow between the Start and Stop activities.
-- Tip: To draw a link (or transition in MDW terminology) between activities on the designer canvas, hold down the Shift key on your keyboard,
-  Click on the upstream activity, and continue holding down the mouse left click button while dragging the cursor to the downstream activity 
-  ("shift-click-drag").
-- Your activity can be dragged like this and used in other processes designed by other users.  Actually the proper term in MDW for this 
-  reusable element in the Toolbox is activity implementor.  
-  This conveys the idea that it's actually a template to be dragged and configured as an activity in the canvas, and it also conveys the fact
-  that it always corresponds to a Java class.  
-  To take this reuse concept a step further, your activity implementor can be made discoverable so that it can easily be imported into other 
-  environments and reused across domains.  
-- If you click on the light bulb icon at the top of the Toolbox you'll get an idea how items in the palette can be imported from a file or 
-  discovered in the corporate repository.
-- Double click the activity in the canvas, and in its Definition property tab change the label to something like "Validator Order".  When you  
-  click back on the canvas the activity reflects its new label.
-  
-  ![xml formatter](docs/images/image014.png)
-          
-- Note: If you select the Design property tab for your activity you'll see that it's blank.  A non-trivial activity would allow certain aspects (such as 
-  endpoint URLs) to be configurable, so that it could readily be reused.  For example, take a look at the Design tab for the Start activity.  You control what 
-  appears on the Design tab through the pagelet XML for the activity implementor.  
-  In the creation wizard we left the pagelet XML blank, so the Design tab for the activity is empty.  But to continue with the example of the start activity, 
-  find the Process Start icon in the Toolbox and view its Design tab (for the implementor, not the activity on the canvas).  This gives you an idea of how the 
-  pagelet XML relates to the fields on the Design tab for the activity user.
-  Since we're on the subject you may be interested to know how you can customize the icon for your activity implementor.  
-- On the **Definition tab of the Process Start icon in the Toolbox**, you can choose one of the built-in shapes, or more flexibly choose any GIF, JPG or PNG asset that you can easily add to your 
-  workflow package.
-
-#### Add Multiple Activity Outcomes:
-- Drag a Process Finish activity from the Toolbox, and add another outbound transition from "Validator Order".   
-- Assign Result Code values of "true" and "false" to the respective transitions as illustrated below. 
-- Save your process definition.  The value passed in setReturnCode() in your activity's execute() method dictates which of these two paths will be traversed at
-  runtime.
-  ![xml formatter](docs/images/image015.png)
  
 #### Build and Update mdw-demo project:
 Before you can deploy your demo project to your server, you will need to do a maven build.  You only need to do this once to generate the required dependent jar files.
@@ -206,7 +90,7 @@ Before you can deploy your demo project to your server, you will need to do a ma
 - Next you will need to update your mdw-demo project from Java perspective. 
 - Right click the mdw-demo project, select Maven then Update Project... to update the project with the latest code base from the Maven repository.
 
-### Tomcat Setup & Running Your Process                              
+### Tomcat Setup & Running a Process                              
 
 #### Create Tomcat Server:
 - To execute a workflow process you need a server running with MDW deployed.  For debugging in Eclipse the easiest way to set this up is through a Web Tools Platform server instance. 
@@ -239,7 +123,7 @@ Before you can deploy your demo project to your server, you will need to do a ma
 - The first time you start your server Tomcat explodes the mdw.war file in your deploy/webapps directory and caches the deployable content.  This can sometimes take a minute.  With the server running 
   you should see MDW output in the Eclipse Console view.  You can safely ignore any Dynamic Java compilation errors unless they pertain to the custom activity you created in  
 
-#### Build Workflow Process
+#### Deploy:
 When you upgrade to a new MDW build version in Eclipse, Designer automatically downloads the corresponding mdw.war file into your deploy/webapps directory.  If at any time you want to clean out the MDW deployment and start fresh, you can delete mdw.war and the exploded mdw directory (and for a very thorough cleansing you can even delete the Tomcat cache under deploy/work/Catalina/localhost/mdw).  Then you can deploy from scratch from Package Explorer view by right-clicking on your workflow project and selecting MDW Update > Update Framework Libraries.
 - Make sure your project is added to your Java Build Path/Source. You will need to do this from a Java or Resource perspective.
 - You can confirm that MDW was successfully deployed by accessing MDWHub in your browser:
@@ -268,27 +152,4 @@ When you upgrade to a new MDW build version in Eclipse, Designer automatically d
   instance, click the Values property tab.  
   ![xml formatter](docs/images/image025.png)
  
-#### Change Java Code and Rerun with Breakpoint:
-    	if (!orderIdNode.getLocalName().equals("orderId"))
-    		msg = "Missing order ID.";
-    	else if (!Character.isDigit(orderId.charAt(0)))
-    		msg = "Order ID must begin with a digit.";
-   	
-- Change the Java source so that validation expects an order number that begins with a digit
-- Save your change and run your process again to confirm that this time it fails validation with the appropriate validationResult message.  
-- Note: In the real world Order IDs would likely be unique for each request, so you may want to change the XML input on the process launch Variables 
-  tab to something other than the value remembered from the last launch.
-- Let's pretend that we don't know why validation is failing, so we'd like to debug our Dynamic Java source code.  
-- Set a breakpoint on the line with the if condition by double-clicking on the marker bar on the left side of Eclipse's Java editor.
-- Run your process again, but this time uncheck **"Monitor Runtime Log"** on the Process tab in the launch dialog so that Live View doesn't steal focus while you're debugging.  
-- After clicking Run, switch to the Debug perspective in Eclipse by selecting Window > Open Perspective > Debug.  
-- When process flow reaches your validator activity, you should see the usual green highlighting in the editor.  Here you can step through the code and evaluate variables 
-  in the usual way as described in this section of the online Eclipse help docs.
-- When you're done debugging, continue execution to let the process complete. 
-- You can view the new instance by right-clicking on the process in Process Explorer and selecting View Instances.  
-- Double-click on the top instance row to confirm that this second instance took the Bad Request path.  Make sure that your tomcat server is up to view the Process Instances.
-
 Congratulations! You've completed your mdw-demo project successfully.
-
-
- 
